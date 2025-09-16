@@ -6,12 +6,12 @@ Ich konnte mich nicht an den Zeitplan halten da ich Donnerstag bis Montag krank 
 
 ## Eingesetzte Technologie  
 ### ESP-NOW  
-**Wie ich zu ESP-NOW gekommen bin** 
+**Wie ich zu ESP-NOW gekommen bin**  
 Während meiner Recherche nach einer geeigneten Funktechnologie für mein Projekt bin ich auf *ESP-NOW* gestoßen. Es wurde mir im Internet 
 als mögliche Lösung vorgeschlagen. Nach einer genaueren Auseinandersetzung mit den Eigenschaften stellte sich heraus, dass ESP-NOW sehr 
 gut zu meinen Anforderungen passt: eine einfache, direkte und zuverlässige Datenübertragung zwischen zwei ESP32-Boards ohne zusätzliche Infrastruktur.  
 
-**Funktionsweise**
+**Funktionsweise**  
 ESP-NOW ist ein proprietäres Funkprotokoll von *Espressif*, das die WLAN-Hardware der ESP32- und ESP8266-Mikrocontroller nutzt. Anders als bei 
 einer klassischen WLAN-Verbindung wird kein Router benötigt. Stattdessen tauschen die Geräte ihre *MAC-Adressen* aus und können anschließend direkt 
 miteinander kommunizieren (Peer-to-Peer).
@@ -35,7 +35,7 @@ Damit eignet sich ESP-NOW vor allem für Anwendungen, bei denen kleine Datenmeng
 * *Auf ESP-Geräte beschränkt* – keine direkte Kommunikation mit PCs oder Smartphones
 * *Verschlüsselung vorhanden, aber eingeschränkt* im Vergleich zu normalem WLAN
 
-**Vorteile im Vergleich zu anderen Systemen**
+**Vorteile im Vergleich zu anderen Systemen**  
 Im Vergleich zu anderen Funktechnologien bietet ESP-NOW einige entscheidende Vorteile:
 * *Gegenüber WLAN*: deutlich geringere Latenz und kein Router erforderlich. WLAN ist besser für große Datenmengen, aber überdimensioniert für kleine Steuerdaten.
 * *Gegenüber Bluetooth*: größere Reichweite und stabilere Übertragung, dafür benötigt Bluetooth meist eine aufwendigere Kopplung.
