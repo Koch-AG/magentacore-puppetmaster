@@ -9,7 +9,9 @@ typedef struct data_struct {
   int r, g, b;
   int BGC_r, BGC_g, BGC_b;
   int grad1, grad2;
-  int button1, button2, button3;
+  int button1, button2, button3, buttonC, buttonU, buttonR, buttonD, buttonL;
+  char sa1, sa2, sa3, sa4;
+  int sam;
 } data_struct;
 
 data_struct incomingData;
@@ -20,37 +22,24 @@ data_struct incomingData;
 void OnDataRecv(const uint8_t * mac, const uint8_t *incomingDataBytes, int len) {
   memcpy(&incomingData, incomingDataBytes, sizeof(incomingData));
 
-  printf("=== Neue Daten empfangen ===\n");
-  printf("Farbe: R=%d G=%d B=%d\n", incomingData.r, incomingData.g, incomingData.b);
-  printf("BG:    R=%d G=%d B=%d\n", incomingData.BGC_r, incomingData.BGC_g, incomingData.BGC_b);
-  printf("Servo: grad1=%d grad2=%d\n", incomingData.grad1, incomingData.grad2);
-  printf("Buttons: B1=%d B2=%d B3=%d\n", incomingData.button1, incomingData.button2, incomingData.button3);
-  printf("============================\n");
+  // printf("=== Neue Daten empfangen ===\n");
+  // printf("Farbe: R=%d G=%d B=%d\n", incomingData.r, incomingData.g, incomingData.b);
+  // printf("BG:    R=%d G=%d B=%d\n", incomingData.BGC_r, incomingData.BGC_g, incomingData.BGC_b);
+  // printf("Servo: grad1=%d grad2=%d\n", incomingData.grad1, incomingData.grad2);
+  // printf("Buttons: B1=%d B2=%d B3=%d\n", incomingData.button1, incomingData.button2, incomingData.button3);
+  // printf("Joystick: U=%d R=%d D=%d L=%d C=%d\n", incomingData.buttonU, incomingData.buttonR, incomingData.buttonD, incomingData.buttonL, incomingData.buttonC);
+  // printf("Sample: %d\n",incomingData.sam);
+  // printf("============================\n");
 
   // === Werte auf die Magenta-Hardware anwenden ===
-  magentaobj.setColor(
-    incomingData.r,
-    incomingData.g,
-    incomingData.b,
-    incomingData.BGC_r,
-    incomingData.BGC_g,
-    incomingData.BGC_b
-  );
+  magentaobj.setColor(incomingData.r,incomingData.g, incomingData.b, incomingData.BGC_r, incomingData.BGC_g, incomingData.BGC_b);
+
+  magentaobj.sample(incomingData.sam);
 
   magentaobj.setServo1(incomingData.grad1);
   magentaobj.setServo2(incomingData.grad2);
 
-  // Beispiel: Button-Werte für Aktionen nutzen
-  if (incomingData.button1 == 1) {
-    magentaobj.setSegmentAnzeige('B','1','O','N'); // Anzeige "B1ON"
-    magentaobj.Buzzer(0); // kurzer Pieper
-  }
-  if (incomingData.button2 == 1) {
-    magentaobj.setSegmentAnzeige('B','2','O','N');
-  }
-  if (incomingData.button3 == 1) {
-    magentaobj.setSegmentAnzeige('B','3','O','N');
-  }
+  magentaobj.setSegmentAnzeige(incomingData.sa1, incomingData.sa2, incomingData.sa3, incomingData.sa4);
 }
 
 // ======================
