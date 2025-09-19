@@ -58,17 +58,27 @@ int move = 0;
 int grad1 = 0;
 int grad2 = 0;
 
+char SA1;
+char SA2;
+char SA3;
+char SA4;
+
+int SAM;
+
 typedef struct data_struct {
   int r, g, b;
   int BGC_r, BGC_g, BGC_b;
   int grad1, grad2;
-  int button1, button2, button3;
+  int button1, button2, button3, buttonC, buttonU, buttonR, buttonD, buttonL;
+  char sa1, sa2, sa3, sa4;
+  int sam;
 } data_struct;
 
 data_struct sendData;
 
 // Empfänger-MAC-Adresse (anpassen!)
-uint8_t peerAddress[] = {0x28, 0x37, 0x2F, 0x05, 0x93, 0x24};
+uint8_t peerAddress1[] = {0x28, 0x37, 0x2F, 0x05, 0x93, 0x24};
+uint8_t peerAddress2[] = {0xCC, 0x8D, 0xA2, 0x33, 0x3D, 0x04};
 esp_now_peer_info_t peerInfo;
 
 // ======================
@@ -93,7 +103,7 @@ void setup()
   }
   esp_now_register_send_cb(OnDataSent);
 
-  memcpy(peerInfo.peer_addr, peerAddress, 6);
+  memcpy(peerInfo.peer_addr, peerAddress2, 6);
   peerInfo.channel = 0;
   peerInfo.encrypt = false;
 
@@ -112,12 +122,11 @@ void setup()
 //     case HIGH:
 //       magentaobj.Buzzer(PEEPHIGH);
 //       break;
-    
+//
 //     case LOW:
 //       magentaobj.Buzzer(PEEPLOW);
 //       break;
 //   }
-  
 // }
 
 void ChangeColor()
@@ -331,7 +340,7 @@ void ReadButton()
 {
   if(magentaobj.button_1 != button_last1 && magentaobj.button_1 == 1)
   {
-    acc = ACC;
+    // acc = ACC;
     segment = NORA;
     servo = SERVO1;
 
@@ -482,12 +491,14 @@ void printStats()
   // printf ("Grad 1: %i\n", grad1);
   // printf ("Grad 2: %i\n", grad2);
   // printf("Buzzer: %i", buzzer);
-  printf("=== Neue Daten gesendet ===\n");
-  printf("Farbe: R=%d G=%d B=%d\n", sendData.r, sendData.g, sendData.b);
-  printf("BG:    R=%d G=%d B=%d\n", sendData.BGC_r, sendData.BGC_g, sendData.BGC_b);
-  printf("Servo: grad1=%d grad2=%d\n", sendData.grad1, sendData.grad2);
-  printf("Buttons: B1=%d B2=%d B3=%d\n", sendData.button1, sendData.button2, sendData.button3);
-  printf("============================\n");
+  // printf("=== Neue Daten gesendet ===\n");
+  // printf("Farbe: R=%d G=%d B=%d\n", sendData.r, sendData.g, sendData.b);
+  // printf("BG:    R=%d G=%d B=%d\n", sendData.BGC_r, sendData.BGC_g, sendData.BGC_b);
+  // printf("Servo: grad1=%d grad2=%d\n", sendData.grad1, sendData.grad2);
+  // printf("Buttons: B1=%d B2=%d B3=%d\n", sendData.button1, sendData.button2, sendData.button3);
+  // printf("Joystick: U=%d R=%d D=%d L=%d C=%d\n", sendData.buttonU, sendData.buttonR, sendData.buttonD, sendData.buttonL, sendData.buttonC);
+  // printf("Sample: %d\n",sendData.sam);
+  // printf("============================\n");
 }
 
 void loop() 
@@ -503,10 +514,18 @@ void loop()
   {
     case NORA:
       magentaobj.setSegmentAnzeige('N', 'O', 'R', 'A');
+       SA1 = 'N';
+       SA2 = 'O';
+       SA3 = 'R';
+       SA4 = 'A';
       break;
   
     case REMO:
       magentaobj.setSegmentAnzeige('R', 'E', 'M', 'O');   
+       SA1 = 'R';
+       SA2 = 'E';
+       SA3 = 'M';
+       SA4 = 'O';
       break;
   }
 
@@ -521,11 +540,13 @@ void loop()
       if(Counter <= 1)
       {
         magentaobj.sample(1);
+        SAM = 1;
       }
       
       if(Counter > 1)
       {
         magentaobj.sample(0);
+        SAM = 0;
         if(Counter >= 2)
         {
           Counter = 0;
@@ -549,8 +570,18 @@ void loop()
   sendData.button1 = magentaobj.button_1;
   sendData.button2 = magentaobj.button_2;
   sendData.button3 = magentaobj.button_3;
+  sendData.buttonU = magentaobj.button_Up;
+  sendData.buttonC = magentaobj.button_Center;
+  sendData.buttonR = magentaobj.button_Right;
+  sendData.buttonL = magentaobj.button_Left;
+  sendData.buttonD = magentaobj.button_Down;
+  sendData.sa1 = SA1;
+  sendData.sa2 = SA2;
+  sendData.sa3 = SA3;
+  sendData.sa4 = SA4;
+  sendData.sam = SAM;
 
-  esp_err_t result = esp_now_send(peerAddress, (uint8_t *) &sendData, sizeof(sendData));
+  esp_err_t result = esp_now_send(peerAddress2, (uint8_t *) &sendData, sizeof(sendData));
   if (result == ESP_OK) {
     printf("Daten gesendet\n");
   } else {
